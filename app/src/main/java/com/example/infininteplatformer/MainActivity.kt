@@ -38,7 +38,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -56,8 +55,48 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
-data class Platform(val x: Float, val y: Float, val width: Float, val height: Float)
-
+// Your mutableStateOf variables for platforms
+var PH by mutableStateOf(0)
+var P1X by mutableStateOf(0)
+var P1Y by mutableStateOf(0)
+var MP1X by mutableStateOf(0)
+var P1W by mutableStateOf(0)
+var P2X by mutableStateOf(0)
+var P2Y by mutableStateOf(0)
+var MP2X by mutableStateOf(0)
+var P2W by mutableStateOf(0)
+var P3X by mutableStateOf(0)
+var P3Y by mutableStateOf(0)
+var MP3X by mutableStateOf(0)
+var P3W by mutableStateOf(0)
+var P4X by mutableStateOf(0)
+var P4Y by mutableStateOf(0)
+var MP4X by mutableStateOf(0)
+var P4W by mutableStateOf(0)
+var P5X by mutableStateOf(0)
+var P5Y by mutableStateOf(0)
+var MP5X by mutableStateOf(0)
+var P5W by mutableStateOf(0)
+var P6X by mutableStateOf(0)
+var P6Y by mutableStateOf(0)
+var MP6X by mutableStateOf(0)
+var P6W by mutableStateOf(0)
+var P7X by mutableStateOf(0)
+var P7Y by mutableStateOf(0)
+var MP7X by mutableStateOf(0)
+var P7W by mutableStateOf(0)
+var P8X by mutableStateOf(0)
+var P8Y by mutableStateOf(0)
+var MP8X by mutableStateOf(0)
+var P8W by mutableStateOf(0)
+var P9X by mutableStateOf(0)
+var P9Y by mutableStateOf(0)
+var MP9X by mutableStateOf(0)
+var P9W by mutableStateOf(0)
+var P10X by mutableStateOf(0)
+var P10Y by mutableStateOf(0)
+var MP10X by mutableStateOf(0)
+var P10W by mutableStateOf(0)
 var scoreState = mutableStateOf(0)
 val mp3Files = listOf(
     R.raw.blue_skies,
@@ -79,6 +118,9 @@ val mp3Files = listOf(
 )
 val Lightblue = Color(0xff8caaf2)
 val Lightgray = Color(0xff646368)
+var playerX by mutableStateOf(0)
+var playerY by mutableStateOf(0)
+var playerradius by mutableStateOf(10.dp) // Set a default radius
 
 
 class MainActivity : ComponentActivity() {
@@ -141,7 +183,7 @@ class MainActivity : ComponentActivity() {
             PlatformCalculations()
             Playerinteraction()
             Score()
-            doDebug(navController)
+            DoDebug()
             if (isDebugModeEnabled) {
                 Debug(navController) // Use your custom Debug() composable here
             }
@@ -774,17 +816,17 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun Bounce() {
-
+//future feature
     }
 
     @Composable
     fun Gravity() {
-
+//future feature
     }
 
     @Composable
     fun Death() {
-
+//future feature
     }
 
     @Composable
@@ -799,6 +841,10 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun Player(xpos: Float, ypos: Int = 0) {
+        playerX = xpos.toInt()
+        playerY = ypos
+        playerradius = 10.dp
+
         Canvas(modifier = Modifier.offset { IntOffset(xpos.roundToInt(), ypos) }) {
             drawCircle(
                 color = Color.Red,
@@ -811,7 +857,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun MusicPlayer(mp3Files: List<Int>? = null, songResourceId: Int? = null) {
         val context = LocalContext.current
-        val lifecycleOwner = LocalLifecycleOwner.current
+        val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
         var mediaPlayer: MediaPlayer? by remember { mutableStateOf(null) }
         var currentSongIndex by remember { mutableStateOf(0) }
         var shuffledMp3Files by remember { mutableStateOf(mp3Files?.shuffled() ?: emptyList()) }
@@ -918,7 +964,7 @@ class MainActivity : ComponentActivity() {
 //Start Of Debug Code
     var isDebugModeEnabled by mutableStateOf(false)
     @Composable
-    fun doDebug(navController: NavController) {
+    fun DoDebug() {
         var tapCount by remember { mutableStateOf(0) }
         var lastTapTime by remember { mutableStateOf(0L) }
         val tapWindowMillis = 2000 // 2 seconds
@@ -961,12 +1007,12 @@ class MainActivity : ComponentActivity() {
 
     // Debug Settings Screen
     @Composable
-    fun DebugSettingsScreen(navController: androidx.navigation.NavController) {
+    fun DebugSettingsScreen(navController: NavController) {
         Box(modifier = Modifier
             .fillMaxSize()
             .systemBarsPadding()
         ) {
-            var P1isChecked by remember { mutableStateOf(true) }
+            var P1isChecked by remember { mutableStateOf(false) }
             var P2isChecked by remember { mutableStateOf(false) }
             var P3isChecked by remember { mutableStateOf(false) }
             var P4isChecked by remember { mutableStateOf(false) }
@@ -976,6 +1022,27 @@ class MainActivity : ComponentActivity() {
             var P8isChecked by remember { mutableStateOf(false) }
             var P9isChecked by remember { mutableStateOf(false) }
             var P10isChecked by remember { mutableStateOf(false) }
+            if (whichP == 1) {
+                P1isChecked = true
+            } else if (whichP == 2) {
+                P2isChecked = true
+            } else if (whichP == 3) {
+                P3isChecked = true
+            } else if (whichP == 4) {
+                P4isChecked = true
+            } else if (whichP == 5) {
+                P5isChecked = true
+            } else if (whichP == 6) {
+                P6isChecked = true
+                } else if (whichP == 7) {
+                P7isChecked = true
+            } else if (whichP == 8) {
+                P8isChecked = true
+            } else if (whichP == 9) {
+                P9isChecked = true
+            } else if (whichP == 10) {
+                P10isChecked = true
+            }
 
             Text(
                 text = "Which Platform",
@@ -989,16 +1056,16 @@ class MainActivity : ComponentActivity() {
             )
             Switch(
                 checked = P1isChecked,
-                onCheckedChange = { P1isChecked = it;
-                    P2isChecked = false;
-                    P3isChecked = false;
-                    P4isChecked = false;
-                    P5isChecked = false;
-                    P6isChecked = false;
-                    P7isChecked = false;
-                    P8isChecked = false;
-                    P9isChecked = false;
-                    P10isChecked = false;
+                onCheckedChange = { P1isChecked = it
+                    P2isChecked = false
+                    P3isChecked = false
+                    P4isChecked = false
+                    P5isChecked = false
+                    P6isChecked = false
+                    P7isChecked = false
+                    P8isChecked = false
+                    P9isChecked = false
+                    P10isChecked = false
                     whichP = 1 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
@@ -1020,16 +1087,16 @@ class MainActivity : ComponentActivity() {
             )
             Switch(
                 checked = P2isChecked,
-                onCheckedChange = { P2isChecked = it;
-                    P1isChecked = false;
-                    P3isChecked = false;
-                    P4isChecked = false;
-                    P5isChecked = false;
-                    P6isChecked = false;
-                    P7isChecked = false;
-                    P8isChecked = false;
-                    P9isChecked = false;
-                    P10isChecked = false;
+                onCheckedChange = { P2isChecked = it
+                    P1isChecked = false
+                    P3isChecked = false
+                    P4isChecked = false
+                    P5isChecked = false
+                    P6isChecked = false
+                    P7isChecked = false
+                    P8isChecked = false
+                    P9isChecked = false
+                    P10isChecked = false
                     whichP = 2 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
@@ -1051,16 +1118,16 @@ class MainActivity : ComponentActivity() {
             )
             Switch(
                 checked = P3isChecked,
-                onCheckedChange = { P3isChecked = it ;
-                    P1isChecked = false;
-                    P2isChecked = false;
-                    P4isChecked = false;
-                    P5isChecked = false;
-                    P6isChecked = false;
-                    P7isChecked = false;
-                    P8isChecked = false;
-                    P9isChecked = false;
-                    P10isChecked = false;
+                onCheckedChange = { P3isChecked = it
+                    P1isChecked = false
+                    P2isChecked = false
+                    P4isChecked = false
+                    P5isChecked = false
+                    P6isChecked = false
+                    P7isChecked = false
+                    P8isChecked = false
+                    P9isChecked = false
+                    P10isChecked = false
                     whichP = 3 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
@@ -1082,7 +1149,17 @@ class MainActivity : ComponentActivity() {
             )
             Switch(
                 checked = P4isChecked,
-                onCheckedChange = { P4isChecked = it; P1isChecked = false; P2isChecked = false; P3isChecked = false; P5isChecked = false; P6isChecked = false; P7isChecked = false; P8isChecked = false; P9isChecked = false; P10isChecked = false; whichP = 4 },
+                onCheckedChange = { P4isChecked = it
+                    P1isChecked = false
+                    P2isChecked = false
+                    P3isChecked = false
+                    P5isChecked = false
+                    P6isChecked = false
+                    P7isChecked = false
+                    P8isChecked = false
+                    P9isChecked = false
+                    P10isChecked = false
+                    whichP = 4 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
                     checkedTrackColor = Lightblue,
@@ -1103,7 +1180,17 @@ class MainActivity : ComponentActivity() {
             )
             Switch(
                 checked = P5isChecked,
-                onCheckedChange = { P5isChecked = it; P1isChecked = false; P2isChecked = false; P3isChecked = false; P4isChecked = false; P6isChecked = false; P7isChecked = false; P8isChecked = false; P9isChecked = false; P10isChecked = false; whichP = 5 },
+                onCheckedChange = { P5isChecked = it
+                    P1isChecked = false
+                    P2isChecked = false
+                    P3isChecked = false
+                    P4isChecked = false
+                    P6isChecked = false
+                    P7isChecked = false
+                    P8isChecked = false
+                    P9isChecked = false
+                    P10isChecked = false
+                    whichP = 5 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
                     checkedTrackColor = Lightblue,
@@ -1124,7 +1211,17 @@ class MainActivity : ComponentActivity() {
             )
             Switch(
                 checked = P6isChecked,
-                onCheckedChange = { P6isChecked = it; P1isChecked = false; P2isChecked = false; P3isChecked = false; P4isChecked = false; P5isChecked = false; P7isChecked = false; P8isChecked = false; P9isChecked = false; P10isChecked = false; whichP = 6 },
+                onCheckedChange = { P6isChecked = it
+                    P1isChecked = false
+                    P2isChecked = false
+                    P3isChecked = false
+                    P4isChecked = false
+                    P5isChecked = false
+                    P7isChecked = false
+                    P8isChecked = false
+                    P9isChecked = false
+                    P10isChecked = false
+                    whichP = 6 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
                     checkedTrackColor = Lightblue,
@@ -1145,7 +1242,17 @@ class MainActivity : ComponentActivity() {
             )
             Switch(
                 checked = P7isChecked,
-                onCheckedChange = { P7isChecked = it; P1isChecked = false; P2isChecked = false; P3isChecked = false; P4isChecked = false; P5isChecked = false; P6isChecked = false; P8isChecked = false; P9isChecked = false; P10isChecked = false; whichP = 7 },
+                onCheckedChange = { P7isChecked = it
+                    P1isChecked = false
+                    P2isChecked = false
+                    P3isChecked = false
+                    P4isChecked = false
+                    P5isChecked = false
+                    P6isChecked = false
+                    P8isChecked = false
+                    P9isChecked = false
+                    P10isChecked = false
+                    whichP = 7 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
                     checkedTrackColor = Lightblue,
@@ -1166,7 +1273,17 @@ class MainActivity : ComponentActivity() {
             )
             Switch(
                 checked = P8isChecked,
-                onCheckedChange = { P8isChecked = it; P1isChecked = false; P2isChecked = false; P3isChecked = false; P4isChecked = false; P5isChecked = false; P6isChecked = false; P7isChecked = false; P9isChecked = false; P10isChecked = false; whichP = 8 },
+                onCheckedChange = { P8isChecked = it
+                    P1isChecked = false
+                    P2isChecked = false
+                    P3isChecked = false
+                    P4isChecked = false
+                    P5isChecked = false
+                    P6isChecked = false
+                    P7isChecked = false
+                    P9isChecked = false
+                    P10isChecked = false
+                    whichP = 8 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
                     checkedTrackColor = Lightblue,
@@ -1187,7 +1304,17 @@ class MainActivity : ComponentActivity() {
             )
             Switch(
                 checked = P9isChecked,
-                onCheckedChange = { P9isChecked = it; P1isChecked = false; P2isChecked = false; P3isChecked = false; P4isChecked = false; P5isChecked = false; P6isChecked = false; P7isChecked = false; P8isChecked = false; P10isChecked = false; whichP = 9 },
+                onCheckedChange = { P9isChecked = it
+                    P1isChecked = false
+                    P2isChecked = false
+                    P3isChecked = false
+                    P4isChecked = false
+                    P5isChecked = false
+                    P6isChecked = false
+                    P7isChecked = false
+                    P8isChecked = false
+                    P10isChecked = false
+                    whichP = 9 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
                     checkedTrackColor = Lightblue,
@@ -1208,7 +1335,17 @@ class MainActivity : ComponentActivity() {
             )
             Switch(
                 checked = P10isChecked,
-                onCheckedChange = { P10isChecked = it; P1isChecked = false; P2isChecked = false; P3isChecked = false; P4isChecked = false; P5isChecked = false; P6isChecked = false; P7isChecked = false; P8isChecked = false; P9isChecked = false; whichP = 10 },
+                onCheckedChange = { P10isChecked = it
+                    P1isChecked = false
+                    P2isChecked = false
+                    P3isChecked = false
+                    P4isChecked = false
+                    P5isChecked = false
+                    P6isChecked = false
+                    P7isChecked = false
+                    P8isChecked = false
+                    P9isChecked = false
+                    whichP = 10 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
                     checkedTrackColor = Lightblue,
@@ -1224,8 +1361,8 @@ class MainActivity : ComponentActivity() {
             )
             Box(
                 modifier = Modifier
-                    .padding(20.dp)
-                    .offset(-10.dp, 0.dp)
+                    .padding(16.dp)
+                    .offset(0.dp, 0.dp)
                     .size(40.dp, 16.dp)
                     .align(Alignment.BottomEnd)
                     .clickable {
@@ -1244,47 +1381,6 @@ class MainActivity : ComponentActivity() {
     var currentSongNameState = mutableStateOf("No song playing")
     var currentSongCountState by mutableStateOf(0)
     var touchXdb by mutableStateOf(0)
-    var PH by mutableStateOf(0)
-    var P1X by mutableStateOf(0)
-    var P1Y by mutableStateOf(0)
-    var MP1X by mutableStateOf(0)
-    var P1W by mutableStateOf(0)
-    var P2X by mutableStateOf(0)
-    var P2Y by mutableStateOf(0)
-    var MP2X by mutableStateOf(0)
-    var P2W by mutableStateOf(0)
-    var P3X by mutableStateOf(0)
-    var P3Y by mutableStateOf(0)
-    var MP3X by mutableStateOf(0)
-    var P3W by mutableStateOf(0)
-    var P4X by mutableStateOf(0)
-    var P4Y by mutableStateOf(0)
-    var MP4X by mutableStateOf(0)
-    var P4W by mutableStateOf(0)
-    var P5X by mutableStateOf(0)
-    var P5Y by mutableStateOf(0)
-    var MP5X by mutableStateOf(0)
-    var P5W by mutableStateOf(0)
-    var P6X by mutableStateOf(0)
-    var P6Y by mutableStateOf(0)
-    var MP6X by mutableStateOf(0)
-    var P6W by mutableStateOf(0)
-    var P7X by mutableStateOf(0)
-    var P7Y by mutableStateOf(0)
-    var MP7X by mutableStateOf(0)
-    var P7W by mutableStateOf(0)
-    var P8X by mutableStateOf(0)
-    var P8Y by mutableStateOf(0)
-    var MP8X by mutableStateOf(0)
-    var P8W by mutableStateOf(0)
-    var P9X by mutableStateOf(0)
-    var P9Y by mutableStateOf(0)
-    var MP9X by mutableStateOf(0)
-    var P9W by mutableStateOf(0)
-    var P10X by mutableStateOf(0)
-    var P10Y by mutableStateOf(0)
-    var MP10X by mutableStateOf(0)
-    var P10W by mutableStateOf(0)
     var whichP by mutableStateOf(1)
 
     @Composable
@@ -1351,6 +1447,13 @@ class MainActivity : ComponentActivity() {
                     .align(Alignment.TopEnd)
                     .offset(-16.dp, 32.dp)
             )
+            Text(
+                text = "Which Platform: $whichP",
+                modifier = Modifier
+                    .systemBarsPadding()
+                    .align(Alignment.TopEnd)
+                    .offset(-16.dp, 48.dp)
+            )
         }
         Box(modifier = Modifier
             .fillMaxSize()
@@ -1391,7 +1494,7 @@ class MainActivity : ComponentActivity() {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawRect(
                         color = Color.Blue,
-                        topLeft = Offset(MP1X.toFloat(), (P1Y + platformHeight).toFloat()),
+                        topLeft = Offset(MP1X.toFloat(), (P1Y + platformHeight)),
                         size = Size(P1W.toFloat(), platformHeight)
                     )
                 }
@@ -1440,7 +1543,7 @@ class MainActivity : ComponentActivity() {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawRect(
                         color = Color.Blue,
-                        topLeft = Offset(MP2X.toFloat(), (P2Y + platformHeight).toFloat()),
+                        topLeft = Offset(MP2X.toFloat(), (P2Y + platformHeight)),
                         size = Size(P2W.toFloat(), platformHeight)
                     )
                 }
@@ -1489,7 +1592,7 @@ class MainActivity : ComponentActivity() {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawRect(
                         color = Color.Blue,
-                        topLeft = Offset(MP3X.toFloat(), (P3Y + platformHeight).toFloat()),
+                        topLeft = Offset(MP3X.toFloat(), (P3Y + platformHeight)),
                         size = Size(P3W.toFloat(), platformHeight)
                     )
                 }
@@ -1538,7 +1641,7 @@ class MainActivity : ComponentActivity() {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawRect(
                         color = Color.Blue,
-                        topLeft = Offset(MP4X.toFloat(), (P4Y + platformHeight).toFloat()),
+                        topLeft = Offset(MP4X.toFloat(), (P4Y + platformHeight)),
                         size = Size(P4W.toFloat(), platformHeight)
                     )
                 }
@@ -1587,7 +1690,7 @@ class MainActivity : ComponentActivity() {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawRect(
                         color = Color.Blue,
-                        topLeft = Offset(MP5X.toFloat(), (P5Y + platformHeight).toFloat()),
+                        topLeft = Offset(MP5X.toFloat(), (P5Y + platformHeight)),
                         size = Size(P5W.toFloat(), platformHeight)
                     )
                 }
@@ -1636,7 +1739,7 @@ class MainActivity : ComponentActivity() {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawRect(
                         color = Color.Blue,
-                        topLeft = Offset(MP6X.toFloat(), (P6Y + platformHeight).toFloat()),
+                        topLeft = Offset(MP6X.toFloat(), (P6Y + platformHeight)),
                         size = Size(P6W.toFloat(), platformHeight)
                     )
                 }
@@ -1685,7 +1788,7 @@ class MainActivity : ComponentActivity() {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawRect(
                         color = Color.Blue,
-                        topLeft = Offset(MP7X.toFloat(), (P7Y + platformHeight).toFloat()),
+                        topLeft = Offset(MP7X.toFloat(), (P7Y + platformHeight)),
                         size = Size(P7W.toFloat(), platformHeight)
                     )
                 }
@@ -1734,7 +1837,7 @@ class MainActivity : ComponentActivity() {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawRect(
                         color = Color.Blue,
-                        topLeft = Offset(MP8X.toFloat(), (P8Y + platformHeight).toFloat()),
+                        topLeft = Offset(MP8X.toFloat(), (P8Y + platformHeight)),
                         size = Size(P8W.toFloat(), platformHeight)
                     )
                 }
@@ -1783,7 +1886,7 @@ class MainActivity : ComponentActivity() {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawRect(
                         color = Color.Blue,
-                        topLeft = Offset(MP9X.toFloat(), (P9Y + platformHeight).toFloat()),
+                        topLeft = Offset(MP9X.toFloat(), (P9Y + platformHeight)),
                         size = Size(P9W.toFloat(), platformHeight)
                     )
                 }
@@ -1832,7 +1935,7 @@ class MainActivity : ComponentActivity() {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawRect(
                         color = Color.Blue,
-                        topLeft = Offset(MP10X.toFloat(), (P10Y + platformHeight).toFloat()),
+                        topLeft = Offset(MP10X.toFloat(), (P10Y + platformHeight)),
                         size = Size(P10W.toFloat(), platformHeight)
                     )
                 }

@@ -29,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -121,6 +123,7 @@ val Lightgray = Color(0xff646368)
 var playerX by mutableStateOf(0)
 var playerY by mutableStateOf(0)
 var playerradius by mutableStateOf(10.dp) // Set a default radius
+var playeralive by mutableStateOf(true)
 
 
 class MainActivity : ComponentActivity() {
@@ -179,9 +182,21 @@ class MainActivity : ComponentActivity() {
     // Game Screen
     @Composable
     fun GameScreen(navController: NavController) {
+        val context = LocalContext.current
+        val displayMetrics = context.resources.displayMetrics
+        val screenHeight = displayMetrics.heightPixels.toFloat()
+
+        // Check if the player is out of bounds
+        if (playerY > screenHeight || playerY < 0) {
+            playeralive = false
+        }
+
         Box(modifier = Modifier.fillMaxSize()) {
-            PlatformCalculations()
-            Playerinteraction()
+            if (playeralive) {
+                PlatformCalculations()
+                Playerinteraction()
+            }
+            Death()
             Score()
             DoDebug()
             if (isDebugModeEnabled) {
@@ -218,9 +233,15 @@ class MainActivity : ComponentActivity() {
                     )
                 }
         ) {
+            LaunchedEffect(playeralive) {
+                while (playeralive) {
+                    playerY += 5
+                    delay(16)
+                }
+            }
             touchXdb = touchX.toInt()
             var playerX = touchX - pixelValue
-            Player(xpos = playerX)
+            Player(xpos = playerX, ypos = playerY)
         }
     }
 
@@ -351,7 +372,7 @@ class MainActivity : ComponentActivity() {
             maxX = (screenWidth - width)
             platformY = startpos
             platformX = Random.nextFloat() * maxX
-            while (true) {
+            while (playeralive) {
                 platformY -= platformSpeed
                 if (platformY < 0) { // Reset logic is now inside the loop
                     scoreState.value++
@@ -400,7 +421,7 @@ class MainActivity : ComponentActivity() {
             maxX = (screenWidth - width)
             platformY = startpos * 2
             platformX = Random.nextFloat() * maxX
-            while (true) {
+              while (playeralive) {
                 platformY -= platformSpeed
                 if (platformY < 0) { // Reset logic is now inside the loop
                     scoreState.value++
@@ -449,7 +470,7 @@ class MainActivity : ComponentActivity() {
             maxX = (screenWidth - width)
             platformY = startpos * 3
             platformX = Random.nextFloat() * maxX
-            while (true) {
+              while (playeralive) {
                 platformY -= platformSpeed
                 if (platformY < 0) { // Reset logic is now inside the loop
                     scoreState.value++
@@ -498,7 +519,7 @@ class MainActivity : ComponentActivity() {
             maxX = (screenWidth - width)
             platformY = startpos * 4
             platformX = Random.nextFloat() * maxX
-            while (true) {
+              while (playeralive) {
                 platformY -= platformSpeed
                 if (platformY < 0) { // Reset logic is now inside the loop
                     scoreState.value++
@@ -547,7 +568,7 @@ class MainActivity : ComponentActivity() {
             maxX = (screenWidth - width)
             platformY = startpos * 5
             platformX = Random.nextFloat() * maxX
-            while (true) {
+              while (playeralive) {
                 platformY -= platformSpeed
                 if (platformY < 0) { // Reset logic is now inside the loop
                     scoreState.value++
@@ -596,7 +617,7 @@ class MainActivity : ComponentActivity() {
             maxX = (screenWidth - width)
             platformY = startpos * 6
             platformX = Random.nextFloat() * maxX
-            while (true) {
+              while (playeralive) {
                 platformY -= platformSpeed
                 if (platformY < 0) { // Reset logic is now inside the loop
                     scoreState.value++
@@ -645,7 +666,7 @@ class MainActivity : ComponentActivity() {
             maxX = (screenWidth - width)
             platformY = startpos * 7
             platformX = Random.nextFloat() * maxX
-            while (true) {
+              while (playeralive) {
                 platformY -= platformSpeed
                 if (platformY < 0) { // Reset logic is now inside the loop
                     scoreState.value++
@@ -694,7 +715,7 @@ class MainActivity : ComponentActivity() {
             maxX = (screenWidth - width)
             platformY = startpos * 8
             platformX = Random.nextFloat() * maxX
-            while (true) {
+              while (playeralive) {
                 platformY -= platformSpeed
                 if (platformY < 0) { // Reset logic is now inside the loop
                     scoreState.value++
@@ -743,7 +764,7 @@ class MainActivity : ComponentActivity() {
             maxX = (screenWidth - width)
             platformY = startpos * 9
             platformX = Random.nextFloat() * maxX
-            while (true) {
+              while (playeralive) {
                 platformY -= platformSpeed
                 if (platformY < 0) { // Reset logic is now inside the loop
                     scoreState.value++
@@ -792,7 +813,7 @@ class MainActivity : ComponentActivity() {
             maxX = (screenWidth - width)
             platformY = startpos * 10
             platformX = Random.nextFloat() * maxX
-            while (true) {
+              while (playeralive) {
                 platformY -= platformSpeed
                 if (platformY < 0) { // Reset logic is now inside the loop
                     scoreState.value++
@@ -826,7 +847,14 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun Death() {
-//future feature
+        val context = LocalContext.current
+        val displayMetrics = context.resources.displayMetrics
+        val screenHeight = displayMetrics.heightPixels.toFloat()
+    if (playerY > screenHeight) {
+        playeralive = false
+    }
+    if (playerY < 0)
+        playeralive = false
     }
 
     @Composable
@@ -857,10 +885,11 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun MusicPlayer(mp3Files: List<Int>? = null, songResourceId: Int? = null) {
         val context = LocalContext.current
-        val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+        val lifecycleOwner = LocalLifecycleOwner.current
         var mediaPlayer: MediaPlayer? by remember { mutableStateOf(null) }
         var currentSongIndex by remember { mutableStateOf(0) }
         var shuffledMp3Files by remember { mutableStateOf(mp3Files?.shuffled() ?: emptyList()) }
+        val coroutineScope = rememberCoroutineScope()
 
         val songNames = mapOf(
             R.raw.blue_skies to "Blue Skies",
@@ -881,12 +910,35 @@ class MainActivity : ComponentActivity() {
             R.raw.wallpaper to "Wallpaper"
         )
 
-        // Initialize MediaPlayer for single song
-        LaunchedEffect(key1 = songResourceId) {
-            if (songResourceId != null && shuffledMp3Files.isEmpty()) {
-                mediaPlayer = MediaPlayer.create(context, songResourceId).apply {
-                    isLooping = true
+        // Function to play a song
+        fun playSong(resourceId: Int) {
+            mediaPlayer?.release()
+            mediaPlayer = MediaPlayer.create(context, resourceId).apply {
+                isLooping = false
+                setOnCompletionListener {
+                    if (shuffledMp3Files.isNotEmpty()) {
+                        coroutineScope.launch {
+                            delay(1000)
+                            currentSongIndex = (currentSongIndex + 1) % shuffledMp3Files.size
+                            playSong(shuffledMp3Files[currentSongIndex])
+                            currentSongNameState.value =
+                                songNames[shuffledMp3Files[currentSongIndex]] ?: "Unknown Song"
+                            currentSongCountState++
+                        }
+                    }
                 }
+                start()
+            }
+        }
+
+        // Initialize MediaPlayer for single song or playlist
+        LaunchedEffect(key1 = songResourceId, key2 = shuffledMp3Files) {
+            if (songResourceId != null && shuffledMp3Files.isEmpty()) {
+                playSong(songResourceId)
+            } else if (shuffledMp3Files.isNotEmpty()) {
+                playSong(shuffledMp3Files[currentSongIndex])
+                currentSongNameState.value =
+                    songNames[shuffledMp3Files[currentSongIndex]] ?: "Unknown Song"
             }
         }
 
@@ -894,38 +946,7 @@ class MainActivity : ComponentActivity() {
             val observer = LifecycleEventObserver { _, event ->
                 when (event) {
                     Lifecycle.Event.ON_START -> {
-                        if (mp3Files != null) {
-                            if (mediaPlayer == null || !mediaPlayer!!.isPlaying) {
-                                mediaPlayer?.release()
-                                if (shuffledMp3Files.isNotEmpty()) {
-                                    mediaPlayer = MediaPlayer.create(
-                                        context,
-                                        shuffledMp3Files[currentSongIndex]
-                                    ).apply {
-                                        setOnCompletionListener {
-                                            currentSongIndex =
-                                                (currentSongIndex + 1) % shuffledMp3Files.size
-                                            mediaPlayer?.release()
-                                            mediaPlayer = MediaPlayer.create(
-                                                context,
-                                                shuffledMp3Files[currentSongIndex]
-                                            )
-                                            mediaPlayer?.start()
-                                            currentSongNameState.value =
-                                                songNames[shuffledMp3Files[currentSongIndex]]
-                                                    ?: "Unknown Song"
-                                            currentSongCountState++
-                                        }
-                                    }
-                                    mediaPlayer?.start()
-                                    currentSongNameState.value =
-                                        songNames[shuffledMp3Files[currentSongIndex]]
-                                            ?: "Unknown Song"
-                                }
-                            } else {
-                                mediaPlayer?.start()
-                            }
-                        } else if (songResourceId != null) {
+                        if (mediaPlayer?.isPlaying == false) {
                             mediaPlayer?.start()
                         }
                     }

@@ -2,8 +2,6 @@ package com.example.infininteplatformer
 
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.util.DisplayMetrics
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -125,7 +123,6 @@ var playerY by mutableStateOf(0)
 var playerradius by mutableStateOf(10.dp) // Set a default radius
 var playeralive by mutableStateOf(true)
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -141,6 +138,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
 
     @Composable
     fun MyApp() {
@@ -209,10 +207,94 @@ class MainActivity : ComponentActivity() {
     fun Playerinteraction() {
         var touchX by remember { mutableStateOf(0f) }
         val dpValue = 10
+        val density = LocalDensity.current
+        var contactYtop = playerY + (2 * with(density) { dpValue.dp.toPx() })
+        var contactYbottem = playerY - with(density) { dpValue.dp.toPx() }.toInt()
+        var contact by remember { mutableStateOf(false) }
+        var isContactResetting by remember { mutableStateOf(false) } // New state variable
         val context = LocalContext.current
-        val displayMetrics: DisplayMetrics = context.resources.displayMetrics
-        val pixelValue = dpValue * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)
+        val displayMetrics = context.resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels.toFloat()
+        val screenHeight = displayMetrics.heightPixels.toFloat()
+        val bounceby = (screenHeight/10+40).toInt()
+        println("thenumber $contactYtop")
+        println("doesthisonechange ${P1Y.toFloat()}")
+        println("$contact")
+        Canvas(modifier = Modifier.fillMaxSize()) {
 
+            if (contactYtop >= P1Y.toFloat() - 5 &&
+                contactYtop <= P1Y.toFloat() + 5 &&
+                touchX >= P1X.toFloat() &&
+                touchX <= P1X.toFloat() + P1W.toFloat()
+            ) {
+                playerY -= bounceby
+            }
+            if (contactYtop >= P2Y.toFloat() - 5 &&
+                contactYtop <= P2Y.toFloat() + 5 &&
+                touchX >= P2X.toFloat() &&
+                touchX <= P2X.toFloat() + P2W.toFloat()
+            ) {
+                playerY -= bounceby
+            }
+            if (contactYtop >= P3Y.toFloat() - 5 &&
+                contactYtop <= P3Y.toFloat() + 5 &&
+                touchX >= P3X.toFloat() &&
+                touchX <= P3X.toFloat() + P3W.toFloat()
+            ) {
+                playerY -= bounceby
+            }
+            if (contactYtop >= P4Y.toFloat() - 5 &&
+                contactYtop <= P4Y.toFloat() + 5 &&
+                touchX >= P4X.toFloat() &&
+                touchX <= P4X.toFloat() + P4W.toFloat()
+            ) {
+                playerY -= bounceby
+            }
+            if (contactYtop >= P5Y.toFloat() - 5 &&
+                contactYtop <= P5Y.toFloat() + 5 &&
+                touchX >= P5X.toFloat() &&
+                touchX <= P5X.toFloat() + P5W.toFloat()
+            ) {
+                playerY -= bounceby
+            }
+            if (contactYtop >= P6Y.toFloat() - 5 &&
+                contactYtop <= P6Y.toFloat() + 5 &&
+                touchX >= P6X.toFloat() &&
+                touchX <= P6X.toFloat() + P6W.toFloat()
+            ) {
+                playerY -= bounceby
+            }
+            if (contactYtop >= P7Y.toFloat() - 5 &&
+                contactYtop <= P7Y.toFloat() + 5 &&
+                touchX >= P7X.toFloat() &&
+                touchX <= P7X.toFloat() + P7W.toFloat()
+            ) {
+                playerY -= bounceby
+            }
+            if (contactYtop >= P8Y.toFloat() - 5 &&
+                contactYtop <= P8Y.toFloat() + 5 &&
+                touchX >= P8X.toFloat() &&
+                touchX <= P8X.toFloat() + P8W.toFloat()
+            ) {
+                playerY -= bounceby
+            }
+            if (contactYtop >= P9Y.toFloat() - 5 &&
+                contactYtop <= P9Y.toFloat() + 5 &&
+                touchX >= P9X.toFloat() &&
+                touchX <= P9X.toFloat() + P9W.toFloat()
+            ) {
+                playerY -= bounceby
+            }
+            if (contactYtop >= P10Y.toFloat() - 5 &&
+                contactYtop <= P10Y.toFloat() + 5 &&
+                touchX >= P10X.toFloat() &&
+                touchX <= P10X.toFloat() + P10W.toFloat()
+            ) {
+                playerY -= bounceby
+            }
+
+                playerY += 5
+        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -220,27 +302,22 @@ class MainActivity : ComponentActivity() {
                     detectDragGestures(
                         onDragStart = { offset ->
                             touchX = offset.x
-                            Log.d("TouchX", "Drag Start X: $touchX")
                         },
                         onDrag = { change, _ ->
                             touchX = change.position.x
-                            Log.d("TouchX", "Dragging X: $touchX")
                             change.consume()
                         },
                         onDragEnd = {
-                            Log.d("TouchX", "Drag End")
                         }
                     )
                 }
         ) {
-            LaunchedEffect(playeralive) {
-                while (playeralive) {
-                    playerY += 5
-                    delay(16)
-                }
+            LaunchedEffect(Unit) {
+                playerY = (screenHeight/2).toInt()
+                touchX = (screenWidth/2).toInt().toFloat()
             }
             touchXdb = touchX.toInt()
-            var playerX = touchX - pixelValue
+            var playerX = touchX - with(density) { dpValue.dp.toPx() }.toInt()
             Player(xpos = playerX, ypos = playerY)
         }
     }
@@ -828,7 +905,7 @@ class MainActivity : ComponentActivity() {
 
         Canvas(modifier = Modifier.fillMaxSize()) {
             drawRect(
-                color = Color.Green,
+                color = Color.Red,
                 topLeft = Offset(platformX, platformY),
                 size = Size(width, platformHeight)
             )
@@ -878,6 +955,7 @@ class MainActivity : ComponentActivity() {
                 color = Color.Red,
                 radius = 10.dp.toPx(),
                 center = Offset(10.dp.toPx(), 10.dp.toPx())
+
             )
         }
     }
@@ -1505,6 +1583,12 @@ class MainActivity : ComponentActivity() {
                     end = Offset(MP1X.toFloat(), screenHeight),
                     strokeWidth = 5f
                 )
+                drawLine(
+                    color = Color.Magenta,
+                    start = Offset(0f, P1Y.toFloat()),
+                    end = Offset(screenWidth, P1Y.toFloat()),
+                    strokeWidth = 5f
+                )
                 drawRect(
                     color = Color.Yellow,
                     topLeft = Offset(P1X.toFloat(), P1Y.toFloat()),
@@ -1552,6 +1636,12 @@ class MainActivity : ComponentActivity() {
                     color = Color.Cyan,
                     start = Offset(MP2X.toFloat(), 0f),
                     end = Offset(MP2X.toFloat(), screenHeight),
+                    strokeWidth = 5f
+                )
+                drawLine(
+                    color = Color.Magenta,
+                    start = Offset(0f, P2Y.toFloat()),
+                    end = Offset(screenWidth, P2Y.toFloat()),
                     strokeWidth = 5f
                 )
                 drawRect(
@@ -1603,6 +1693,12 @@ class MainActivity : ComponentActivity() {
                     end = Offset(MP3X.toFloat(), screenHeight),
                     strokeWidth = 5f
                 )
+                drawLine(
+                    color = Color.Magenta,
+                    start = Offset(0f, P3Y.toFloat()),
+                    end = Offset(screenWidth, P3Y.toFloat()),
+                    strokeWidth = 5f
+                )
                 drawRect(
                     color = Color.Yellow,
                     topLeft = Offset(P3X.toFloat(), P3Y.toFloat()),
@@ -1650,6 +1746,12 @@ class MainActivity : ComponentActivity() {
                     color = Color.Cyan,
                     start = Offset(MP4X.toFloat(), 0f),
                     end = Offset(MP4X.toFloat(), screenHeight),
+                    strokeWidth = 5f
+                )
+                drawLine(
+                    color = Color.Magenta,
+                    start = Offset(0f, P4Y.toFloat()),
+                    end = Offset(screenWidth, P4Y.toFloat()),
                     strokeWidth = 5f
                 )
                 drawRect(
@@ -1701,6 +1803,12 @@ class MainActivity : ComponentActivity() {
                     end = Offset(MP5X.toFloat(), screenHeight),
                     strokeWidth = 5f
                 )
+                drawLine(
+                    color = Color.Magenta,
+                    start = Offset(0f, P5Y.toFloat()),
+                    end = Offset(screenWidth, P5Y.toFloat()),
+                    strokeWidth = 5f
+                )
                 drawRect(
                     color = Color.Yellow,
                     topLeft = Offset(P5X.toFloat(), P5Y.toFloat()),
@@ -1748,6 +1856,12 @@ class MainActivity : ComponentActivity() {
                     color = Color.Cyan,
                     start = Offset(MP6X.toFloat(), 0f),
                     end = Offset(MP6X.toFloat(), screenHeight),
+                    strokeWidth = 5f
+                )
+                drawLine(
+                    color = Color.Magenta,
+                    start = Offset(0f, P6Y.toFloat()),
+                    end = Offset(screenWidth, P6Y.toFloat()),
                     strokeWidth = 5f
                 )
                 drawRect(
@@ -1799,6 +1913,12 @@ class MainActivity : ComponentActivity() {
                     end = Offset(MP7X.toFloat(), screenHeight),
                     strokeWidth = 5f
                 )
+                drawLine(
+                    color = Color.Magenta,
+                    start = Offset(0f, P7Y.toFloat()),
+                    end = Offset(screenWidth, P7Y.toFloat()),
+                    strokeWidth = 5f
+                )
                 drawRect(
                     color = Color.Yellow,
                     topLeft = Offset(P7X.toFloat(), P7Y.toFloat()),
@@ -1846,6 +1966,13 @@ class MainActivity : ComponentActivity() {
                     color = Color.Cyan,
                     start = Offset(MP8X.toFloat(), 0f),
                     end = Offset(MP8X.toFloat(), screenHeight),
+                    strokeWidth = 5f
+                )
+
+                drawLine(
+                    color = Color.Magenta,
+                    start = Offset(0f, P8Y.toFloat()),
+                    end = Offset(screenWidth, P8Y.toFloat()),
                     strokeWidth = 5f
                 )
                 drawRect(
@@ -1897,6 +2024,12 @@ class MainActivity : ComponentActivity() {
                     end = Offset(MP9X.toFloat(), screenHeight),
                     strokeWidth = 5f
                 )
+                drawLine(
+                    color = Color.Magenta,
+                    start = Offset(0f, P9Y.toFloat()),
+                    end = Offset(screenWidth, P9Y.toFloat()),
+                    strokeWidth = 5f
+                )
                 drawRect(
                     color = Color.Yellow,
                     topLeft = Offset(P8X.toFloat(), P1Y.toFloat()),
@@ -1944,6 +2077,12 @@ class MainActivity : ComponentActivity() {
                     color = Color.Cyan,
                     start = Offset(MP10X.toFloat(), 0f),
                     end = Offset(MP10X.toFloat(), screenHeight),
+                    strokeWidth = 5f
+                )
+                drawLine(
+                    color = Color.Magenta,
+                    start = Offset(0f, P10Y.toFloat()),
+                    end = Offset(screenWidth, P10Y.toFloat()),
                     strokeWidth = 5f
                 )
                 drawRect(

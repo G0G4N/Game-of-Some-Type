@@ -1,4 +1,4 @@
-package com.example.infininteplatformer
+package com.g0g4n.infininteplatformer
 
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -46,7 +46,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.infininteplatformer.ui.theme.InfinintePlatformerTheme
+import com.g0g4n.infininteplatformer.ui.theme.InfinintePlatformerTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

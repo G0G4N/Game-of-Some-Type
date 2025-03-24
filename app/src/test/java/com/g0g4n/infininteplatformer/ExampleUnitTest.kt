@@ -1,4 +1,4 @@
-package com.example.infininteplatformer
+package com.g0g4n.infininteplatformer
 
 import org.junit.Test
 

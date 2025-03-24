@@ -1,4 +1,4 @@
-package com.example.infininteplatformer.ui.theme
+package com.g0g4n.infininteplatformer.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

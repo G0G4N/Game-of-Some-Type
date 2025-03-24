@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.infininteplatformer"
+    namespace = "com.g0g4n.infininteplatformer"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.infininteplatformer"
+        applicationId = "com.g0g4n.infininteplatformer"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
